@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>NMKZzz - Menu</title>
+<style>
+    body {
+        background-color: black;
+        color: #00FF00;
+        font-family: 'Courier New', Courier, monospace;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        overflow: hidden;
+    }
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+    li {
+        padding: 20px;
+        font-size: 28px;
+        transition: all 0.2s;
+    }
+    li:hover, li.active {
+        color: white;
+        text-shadow: 0 0 8px #00FF00, 0 0 20px #00FF00;
+    }
+</style>
+</head>
+<body>
+<ul id="menu">
+    <li class="active">Bad Drift I</li>
+    <li>Bad Drift II (The Silence)</li>
+    <li>Bad Drift III (The First and Last Love)</li>
+</ul>
+
+<audio id="audio1" src="audio/bad1.mp3"></audio>
+<audio id="audio2" src="audio/bad2.mp3"></audio>
+<audio id="audio3" src="audio/bad3.mp3"></audio>
+
+<script>
+    const menu = document.getElementById('menu');
+    const items = menu.getElementsByTagName('li');
+    const audios = [
+        document.getElementById('audio1'),
+        document.getElementById('audio2'),
+        document.getElementById('audio3')
+    ];
+
+    let selected = 0;
+    let currentAudio = null;
+
+    function updateSelection() {
+        for (let i = 0; i < items.length; i++) {
+            items[i].classList.remove('active');
+        }
+        items[selected].classList.add('active');
+    }
+
+    function playSelected() {
+        if (currentAudio) {
+            currentAudio.pause();
+            currentAudio.currentTime = 0;
+        }
+        currentAudio = audios[selected];
+        currentAudio.play();
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') {
+            selected = (selected + 1) % items.length;
+            updateSelection();
+        } else if (e.key === 'ArrowUp') {
+            selected = (selected - 1 + items.length) % items.length;
+            updateSelection();
+        } else if (e.key === 'Enter') {
+            playSelected();
+        }
+    });
+
+    // Clique com mouse também funciona
+    for (let i = 0; i < items.length; i++) {
+        items[i].addEventListener('click', () => {
+            selected = i;
+            updateSelection();
+            playSelected();
+        });
+        items[i].addEventListener('mouseenter', () => {
+            selected = i;
+            updateSelection();
+        });
+    }
+
+    updateSelection();
+</script>
+</body>
+</html>
